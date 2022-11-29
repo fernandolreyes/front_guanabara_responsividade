@@ -1,0 +1,202 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/monitoramento_geral.css' %}">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <link rel="shortcut icon" href="{% static 'img/LogoCESS.png'%}" type="image/x-icon" />
+    <link rel="stylesheet" href="{% static 'css/btnOnOff.css'%}">
+    <title>Consumo de Água</title>
+</head>
+<body>
+
+<header>
+    <a href="https://cess.ind.br/" target="_blank" rel="noopener noreferrer"><img class="logoC" src="{% static 'img/LogoCESS.png'%}" alt="Logo CESS"></a>  
+    <p class="titulo_header">Monitoramento Geral</p>
+    <a href="https://smguanabara.com.br/" target="_blank" rel="noopener noreferrer"><img class="logoG" src="{% static 'img/logo_guanabara.png'%}" alt="Supermercado Guanabara"></a></div>
+</header>
+<div class='botao_encaminhamento_lojas'> <!--botões que encaminham para pagina das lojas-->
+  {% for loja in lojas %}
+           <a href="{%url 'lojas:monitoramento_loja' pk=loja.pk%}"><button class="btn geral">{{loja}}</button><br></a> 
+  {% endfor %} 
+</div>
+<div class="status_equipamentos"> <!--Status de equipamentos e grafico de consumo acumulado anual-->
+            <div id="consumo_acumulado_anual_google" class="consumo_acumulado_anual_google" style="width:75%; height:600px;"></div>
+            
+            <ul class="checkonoff">
+              <p>Equipamentos</p>
+              {%for x in lDiario%}
+              <div class="toggle-wrapper">
+                <a class='{{x.online_offline}}'>
+                  {{x.online_offline}}
+                </a>
+                  <div class="unidade">
+                    {{x.name}}
+                  </div>
+              </div>
+              {%endfor%}
+              </ul>      
+</div>
+<div class="titulo_gauges"><!--caixa titulo e gauges-->
+          <p class="titulo_graficos">Média consumo Diário</p> <!--titulo dos gauges-->
+<div class="gauges"><!--gauges-->
+  {%for x in lDiario %}
+          <div id="gauge_consumo_diario{{x.id}}"class="circulo">
+            <p class="tituloGCD" id="tituloGCD{{x.id}}"></p>
+            <p class="valorGCD" id="valorGCD{{x.id}}"></p>
+          </div>
+  {% endfor %}       
+</div>
+</div>
+<div class="grafico_indice_eficiencia"><!--grafico de indice de eficiencia-->
+    <div id="indice_de_eficiencia_google"class="indice_de_eficiencia_google" style="height: 400px;"></div>
+</div>
+                               
+     <footer></footer> 
+</body>
+</html>
+<script>
+  google.charts.load('current','1',{packages:['corechart']});
+  google.charts.setOnLoadCallback(consumo_anual);
+function consumo_anual() {
+  var dados = google.visualization.arrayToDataTable([
+    ['lojas', 'consumo(m³)', {role: 'style'}],
+    {% for x in lAnual%}
+    ['{{x.name}}',{{x.soma_pulsos}}*{{x.divisor_pulsos}}/1000, '#007af7'],
+    {%endfor%}
+  ]);
+  var opt_consumo_anual = {
+    title: 'Consumo Acumulado Anual (m³)',
+    titleTextStyle: {
+          color: '#f1f1f1',
+          fontName: 'Arial',
+          fontSize: 22,
+          bold: 'false'
+    },
+    legend: 'none',
+    chartArea: {
+          backgroundColor: 'none',
+          left: 70,
+          width: 1150,
+          top: 50,
+          bottom: 60
+    },
+    backgroundColor: {
+          fill: 'none',
+    },
+    dataOpacity: 0.7,
+    bar: {groupWidth: "70%"},
+    vAxis: {
+      minValue:0,
+          gridlines: {
+            color: '#f1f1f1'
+          },
+          textStyle: {
+            color: '#f1f1f1'
+          },  
+    },
+    hAxis: {
+          textStyle: {
+            color: '#f1f1f1',
+          },
+          
+    },      
+};
+var grafico = new google.visualization.ColumnChart(document.getElementById('consumo_acumulado_anual_google'));
+grafico.draw(dados, opt_consumo_anual);
+setInterval(function(){
+  grafico.draw(dados, opt_consumo_anual);
+},300000);
+}
+
+
+function consumo_diario(){
+  {%for x in lDiario%}
+      var vazao = {{x.soma_pulsos}} * {{x.divisor_pulsos}} /1000;
+      gauge_nome = document.getElementById("tituloGCD{{x.id}}");
+      gauge_consumo = document.getElementById("valorGCD{{x.id}}");
+      gauge = document.getElementById("gauge_consumo_diario{{x.id}}");
+      gauge_nome.innerText = "{{x.name}}";
+      gauge_consumo.innerText = vazao.toFixed([2])+"m³";
+      media = {{x.media_diaria}};
+      vintePorCento = 20/100 * {{x.media_diaria}}
+      if(vazao < media){
+        gauge.style.backgroundColor = "green";
+        gauge_nome.style.color = "white";
+        gauge_consumo.style.color = "white";
+      }else if(vazao >= media && vazao < vintePorCento + media){
+        gauge.style.backgroundColor = "yellow";
+        gauge_nome.style.color = "black";
+        gauge_consumo.style.color = "black";
+      }else if(vazao >= vintePorCento + media){
+        gauge.style.backgroundColor = "red";
+        gauge_nome.style.color = "white";
+        gauge_consumo.style.color = "white";
+      }else{
+        gauge.style.backgroundColor = "blue";
+        gauge_nome.style.color = "white";
+        gauge_consumo.style.color = "white";
+      }
+  {%endfor%}
+}
+
+google.charts.load('current',{packages:['corechart']});
+google.charts.setOnLoadCallback(indice_eficiencia);
+consumo_diario()
+function indice_eficiencia() {
+
+  var dados = google.visualization.arrayToDataTable([
+    ['lojas', 'indice de eficiência m³/m²', {role: 'style'}],
+    {%for x in lAnual%}
+
+    ['{{x.name}}', {{x.soma_pulsos}}*{{x.divisor_pulsos}}/1000 / {{x.metros}}, '#007af7'],
+    {%endfor%}
+  ]);
+  
+  var opt_consumo_anual = {
+          title: 'Indice de Eficiência (m³/m²)',
+          titleTextStyle: {
+                color: '#f1f1f1',
+                fontName: 'Arial',
+                fontSize: 22,
+                bold: 'false'
+          },
+          legend: 'none',
+          chartArea: {
+                backgroundColor: 'none',
+                left: 70,
+                width: 1150,
+                right: 30,
+                top: 50,
+                bottom: 60
+          },
+          backgroundColor: {
+                fill: 'none',
+          },
+          dataOpacity: 0.7,
+          vAxis: {
+            minValue:0,
+            gridlines: {
+              color: '#f1f1f1'
+            },
+            textStyle: {
+              color: '#f1f1f1'
+            },  
+          },
+          hAxis: {
+                textStyle: {
+                  color: '#f1f1f1',
+                },
+                
+          },      
+  };
+  
+  var grafico = new google.visualization.AreaChart(document.getElementById('indice_de_eficiencia_google'));
+  grafico.draw(dados, opt_consumo_anual);
+  }
+  
+  setInterval(consumo_diario,300000)
+</script>

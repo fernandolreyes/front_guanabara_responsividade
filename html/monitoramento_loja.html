@@ -1,0 +1,156 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/monitoramento_loja.css' %}">
+    <link rel="shortcut icon" href="{% static 'img/LogoCESS.png' %}" type="image/x-icon" />
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    {%for x in lojas%}
+    <title>{{x}}</title>
+    {%endfor%}
+</head>
+<body>
+<header>
+    <a href="https://cess.ind.br/" target="_blank" rel="noopener noreferrer"><img class="logoC" src="{% static 'img/LogoCESS.png' %}" alt="Logo CESS"></a>  
+    <p class="agua">Monitoramento loja</p>
+    <a href="https://smguanabara.com.br/" target="_blank" rel="noopener noreferrer"><img class="logoG" src="{% static 'img/logo_guanabara.png' %}" alt="Supermercado Guanabara"></a></div>
+</header>
+    
+<div id="caixapreta"> <!--nome e cidade da loja, media de consumo e indice de eficiencia-->
+        {%for x in lojas%}
+        <h1 class="RG">Loja:<br>{{x.name}}</h1>
+        <h3>Média da Unidade:<br>
+        <strong style="text-decoration: underline;">{{x.media_diaria}}m³</strong></h3>
+        <h3 class="indice_de_eficiencia">Índice de Eficiência:<br>
+        <strong style="text-decoration: underline;">XXXm³/m²</strong></h3>
+        {%endfor%}
+</div>
+<div id="caixapreta2"><!--grafico de consumo diario e grafico de consumo mensal-->
+        <div id="grafico_consumo_diario_google" style="height: 520px;"></div>
+
+        <div id="grafico_consumo_mensal_google" style="height: 520px;"></div>
+</div>
+<div id="caixapreta3">
+        <a href="{% url 'lojas:monitoramento_geral'%}"><button><p>Pagina Principal</p></button></a>
+        <input type="submit" id="relatorioOK" value="OK">
+        <h4 class="final">Data final:<input type="date" id="relatorio" min="2022-08-01" max="2030-12-31"></h4> 
+        <h4 class="inicial">Data inicial:<input type="date" id="relatorio1" min="2022-08-01" max="2030-12-31"></h4></div>
+</div>
+<footer></footer>
+</body>
+</html>
+<script>
+        google.charts.load('current',{packages:['corechart']});
+        google.charts.setOnLoadCallback(consumo_mensal);
+        
+        function consumo_mensal() {
+        
+          var dados = google.visualization.arrayToDataTable([
+            ['mês', 'consumo(m³)', {role: 'style'}],
+            {%for x in lMes%}
+            ["{{x.mes}}", {{x.soma_pulsos}}*{{x.divisor_pulsos}}/1000, '#007af7'],
+            {%endfor%}
+          ]);          
+          var opt_consumo_mensal = {
+                  title: 'Consumo mensal (m³)',
+                  titleTextStyle: {
+                        color: '#f1f1f1',
+                        fontName: 'Arial',
+                        fontSize: 22,
+                        bold: 'false'
+                  },
+                  legend: 'none',
+                  chartArea: {
+                        backgroundColor: 'none',
+                        left: 80,
+                        right: 30,
+                        width: 1150,
+                        top: 50,
+                        bottom: 40
+                  },
+                  backgroundColor: {
+                        fill: 'none',
+                  },
+                  dataOpacity: 0.7,
+                  bar: {groupWidth: "50%"},
+                  vAxis: {
+                        textStyle: {
+                          color: '#f1f1f1'
+                        },  
+                  },
+                  hAxis: {
+                        minValue:0,
+                        maxValue:1500,
+                        textStyle: {
+                          color: '#f1f1f1',
+                        },
+                        gridlines: {
+                            color: '#f1f1f1'
+                        },
+                        
+                  },      
+          };
+          
+          var grafico = new google.visualization.BarChart(document.getElementById('grafico_consumo_mensal_google'));
+          grafico.draw(dados, opt_consumo_mensal);
+          }
+          google.charts.load('current',{packages:['corechart']});
+          google.charts.setOnLoadCallback(consumo_diario);
+          
+          function consumo_diario() {
+                
+            var dados = google.visualization.arrayToDataTable([
+                  ['dia', 'consumo(m³)', {role: 'style'}],
+                {%for x in lDiario%}
+                ["{{x.dia}}/{{x.mes}}",{{x.soma_pulsos}}*{{x.divisor_pulsos}}/1000, '#007af7'],
+                {%endfor%}
+              
+          ]);
+            
+          var opt_consumo_diario = {
+                    title: 'Consumo diário (m³)',
+                    titleTextStyle: {
+                          color: '#f1f1f1',
+                          fontName: 'Arial',
+                          fontSize: 22,
+                          bold: 'false'
+                      },
+                      legend: 'none',
+                      chartArea: {
+                            backgroundColor: 'none',
+                            left: 50,
+                            right: 30,
+                            width: 1150,
+                            top: 50,
+                            bottom: 40
+                      },
+                      backgroundColor: {
+                            fill: 'none',
+                      },
+                      dataOpacity: 0.7,
+                      bar: {groupWidth: "50%"},
+                      vAxis: {
+                            textStyle: {
+                                  color: '#f1f1f1'
+                            },  
+                      },
+                    hAxis: {
+                          minValue:0,
+                          maxValue:100,
+                          textStyle: {
+                                color: '#f1f1f1',
+                            },
+                            gridlines: {
+                                  color: '#f1f1f1'
+                            },
+                            
+                      },      
+                };
+            
+                var grafico = new google.visualization.BarChart(document.getElementById('grafico_consumo_diario_google'));
+                grafico.draw(dados, opt_consumo_diario);
+          }
+</script>

@@ -1,0 +1,243 @@
+html {
+    position: static;
+    font-family: Arial, Helvetica, sans-serif;
+}
+body {
+    background-color: #1b213b;
+    margin: 0px;
+    padding: 0px;
+    position: relative;
+    top: 75px;
+}
+.logoC {
+    margin-top: 8px;
+    padding-left: 50px;
+}
+.logoG {
+    margin-top: 6px;
+    padding-left: 70px;
+}
+header {
+    position: fixed;
+    background-image: linear-gradient(to left, rgb(124, 124, 124), #262d47, #1f253a);
+    width: 100%;
+    margin: 0;
+    padding: 0;;
+    top: 0;
+    z-index: 20;
+    height: 70px;
+}
+#btn_sair {
+    cursor: pointer;
+    height: 25px;
+    width: 50px;
+    background-color: #262d47;
+    color: #f1f1f1;
+    border: none;
+    box-shadow: 0px 0px 8px black;
+    float: right;
+    margin-right: 25px;
+    margin-top: 20px;
+}
+#btn_sair:hover {
+    background-color: #1b213b;
+    color: #007af7;
+}
+#btn_alterar_loja {
+    cursor: pointer;
+    height: 25px;
+    width: 85px;
+    background-color: #262d47;
+    color: #f1f1f1;
+    border: none;
+    box-shadow: 0px 0px 8px black;
+    float: right;
+    margin-right: 5px;
+    margin-top: 20px;
+}
+#btn_alterar_loja:hover {
+    background-color: #1b213b;
+    color: #007af7;
+}
+.agua {
+    color: rgb(124, 124, 124);
+    padding-left: 0px;
+    padding-right: 30px;
+    font-size: 18pt;
+    margin-top: 15px;
+    display: none;
+}
+#caixapreta {
+    display: flex;
+    justify-content: space-between;
+    margin-left: 25px;
+    margin-right: 25px;
+}
+h3 {
+    background-color: #262d47;;
+    color: #007af7;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 10px 15px 20px black;
+    flex-wrap: wrap;
+    border-radius: 8px;
+    font-size: 18pt;
+    margin: 10px;
+    line-height: 40px;
+}
+h1 {
+    background-color: #262d47;;
+    color: #f1f1f1;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 10px 15px 20px black;
+    flex-wrap: wrap;
+    border-radius: 8px;
+    font-size: 18pt;
+    margin: 10px;
+    height: 70px;
+    line-height: 35px;
+}
+button {
+    background-color: #262d47;
+    box-shadow: 0px 0px 20px black;
+    color: #f1f1f1;
+    font-size: 15px;
+    margin-left: 25px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    width: 140px;
+    height: 50px;
+}
+button :hover {
+    color: #007af7;
+
+}
+#caixapreta2 {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; 
+    margin-left: 25px;
+    margin-right: 25px;
+    margin-top: 25px;
+    margin-bottom: 25px;
+   min-width: 620px;
+}
+#relatorioOK {
+    float: right;
+    margin-top: 22px;
+    margin-right: 30px;
+    cursor: pointer;
+
+}
+#relatorio {
+    float: right;
+    margin-right: 30px;
+    margin-left: 8px;
+    cursor: pointer;
+}
+#relatorio1 {
+    float: right;
+    margin-right: 30px;
+    margin-left: 8px;
+    cursor: pointer;
+}
+#caixapreta4 {
+    float: right;
+    background-color: #262d47;
+    margin-right: 40px;
+    border-radius: 10px;
+    box-shadow: 10px 10px 20px black;
+}
+
+.inicial {
+    display: flex;
+    float: right;
+    padding-left: 25px;
+    color: #f1f1f1;
+}
+.final {
+    color: #f1f1f1;
+    display: flex;
+    float: right;
+}
+.titulo {
+    color: #f1f1f1;
+    text-align: center;
+    margin-bottom: -20px;
+}
+#grafico_consumo_diario_google {
+    background-color: #262d47;
+    border-radius: 15px;
+    box-shadow: 10px 10px 20px black;
+    width: 49%;
+}
+#grafico_consumo_mensal_google {
+    background-color: #262d47;
+    border-radius: 15px;
+    box-shadow: 10px 10px 20px black;
+    width: 49%;
+}
+footer {
+    width: 100%;
+    position: absolute;
+    height: 35px;
+}
+@media (max-width: 667px) {
+    .logoC {
+        margin-top: 5px;
+        padding: 0px;
+        margin-right: 20px;
+    }
+    .logoG {
+        margin-top: 5px;
+        margin-left: 20px;
+        padding: 0px;
+    }
+    #caixapreta4 {
+        margin-right: 60px;
+        margin-top: 15px;
+    }
+}
+@media (max-width: 414px) {
+    header {
+        height: 130px;
+        justify-content: left;
+    }
+    .logoC {
+        margin-top: 5px;
+        padding: 0;
+    }
+    .logoG {
+        margin-top: 5px;
+        margin-left: 0px;
+        padding: 0px;
+    }
+    #caixapreta2 {
+        display: inline;
+    }
+    #grafico_consumo_mensal_google {
+        width: 92%;
+        margin-left: 15px;
+        margin-top: 15px;
+    }
+    #grafico_consumo_diario_google {
+        width: 92%;
+        margin-left: 15px;
+    }
+    #caixapreta {
+        display: block;
+        margin-top: 70px;
+    }
+    #btn_sair {
+        margin-top: -35px;
+    }
+    #btn_alterar_loja {
+        margin-top: 8px;
+    }
+    #caixapreta4 {
+        margin-left: 50px;
+        margin-top: 25px;
+    }
+}
